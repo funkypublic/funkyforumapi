@@ -1,0 +1,35 @@
+version: '3.0'
+services:
+  funkyforumapi:
+    container_name: funkyforumapi
+    environment:
+      - SERVICE_NAME=funkyforumapi
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    image: "funkyforumapi"
+    depends_on:
+      - "postgres"
+    restart: unless-stopped
+    ports:
+      - "8000"
+    networks:
+      - default
+  postgres:
+    container_name: postgres
+    environment:
+      - SERVICE_NAME=postgres
+      - POSTGRES_PASSWORD=docker
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    volumes:
+      - /etc/postgresql
+      - /var/log/postgresql
+      - /var/lib/postgresql
+    image: "postgres"
+    restart: unless-stopped
+    ports:
+      - "5432"
+    networks:
+      - default
